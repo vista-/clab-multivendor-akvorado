@@ -27,7 +27,8 @@ You can start using this lab topology in four easy steps:
 - Grab the Akvorado docker compose project, copy the configuration files, and deploy it:
 ```
 mkdir ./akvorado
-curl -sL https://github.com/akvorado/akvorado/releases/latest/download/docker-compose-upgrade.tar.gz | tar -C ./akvorado zxvf -
+curl -sL https://github.com/akvorado/akvorado/releases/latest/download/docker-compose-quickstart.tar.gz | tar zxvf - -C ./akvorado
+cp ./akvorado-config/.env ./akvorado/.env
 cp ./akvorado-config/akvorado.yaml ./akvorado/config/akvorado.yaml
 cp ./akvorado-config/inlet.yaml ./akvorado/config/inlet.yaml
 cp ./akvorado-config/docker-compose-local.yml ./akvorado/docker/docker-compose-local.yml
