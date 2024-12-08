@@ -1,0 +1,99 @@
+---
+# This configuration file is documented in docs/02-configuration.md.
+# You can get all default values with `akvorado orchestrator /dev/null
+# --dump --check` or `docker compose run akvorado-orchestrator
+# orchestrator /dev/null --dump --check`.
+
+kafka:
+  topic: flows
+  version: 3.3.1
+  brokers:
+    - kafka:9092
+  topic-configuration:
+    num-partitions: 8
+    replication-factor: 1
+    config-entries:
+      # The retention policy in Kafka is mainly here to keep a buffer
+      # for ClickHouse.
+      segment.bytes: 1073741824
+      retention.ms: 86400000 # 1 day
+      cleanup.policy: delete
+      compression.type: producer
+
+geoip:
+  optional: true
+  # When running on Docker, these paths are inside the container. By default,
+  # IPinfo databases are used. (https://ipinfo.io/)
+  asn-database:
+    - /usr/share/GeoIP/asn.mmdb
+  geo-database:
+    - /usr/share/GeoIP/country.mmdb
+  # If you want to use MaxmindDB, check `.env`, `docker-compose-maxmind.yml` and
+  # update these paths:
+  #asn-database:
+  # - /usr/share/GeoIP/GeoLite2-ASN.mmdb
+  #geo-database:
+  # - /usr/share/GeoIP/GeoLite2-Country.mmdb
+
+clickhouse:
+  orchestrator-url: http://akvorado-orchestrator:8080
+  kafka:
+    consumers: 4
+  servers:
+    - clickhouse:9000
+  prometheus-endpoint: /metrics
+  asns:
+    65100: Junos-Customers
+    65200: SRL-Customers
+    65001: Transit
+    65002: IX
+    65003: PNI
+    65010: iPerf10
+    65020: iPerf20
+    65030: iPerf30
+  networks:
+    # You should customize this section with your networks. This
+    # populates the Src/DstNetName/Role/Site/Region/Tenant fields.
+    10.0.10.0/24:
+      name: iperf10-server
+      role: servers
+    10.0.20.0/24:
+      name: iperf20-server
+      role: servers
+    10.0.30.0/24:
+      name: iperf30-server
+      role: servers
+    192.168.1.10/31:
+      name: junos-customer-iperf10
+      role: customers
+    192.168.1.20/31:
+      name: junos-customer-iperf20
+      role: customers
+    192.168.1.30/31:
+      name: junos-customer-iperf30
+      role: customers
+    192.168.2.10/31:
+      name: srl-customer-iperf10
+      role: customers
+    192.168.2.20/31:
+      name: srl-customer-iperf20
+      role: customers
+    192.168.2.30/31:
+      name: srl-customer-iperf30
+      role: customers
+  network-sources: []
+    # amazon:
+    #   url: https://ip-ranges.amazonaws.com/ip-ranges.json
+    #   interval: 6h
+    #   transform: |
+    #     (.prefixes + .ipv6_prefixes)[] |
+    #     { prefix: (.ip_prefix // .ipv6_prefix), tenant: "amazon", region: .region, role: .service|ascii_downcase }
+    # gcp:
+    #   url: https://www.gstatic.com/ipranges/cloud.json
+    #   interval: 6h
+    #   transform: |
+    #     .prefixes[] |
+    #     { prefix: (.ipv4Prefix // .ipv6Prefix), tenant: "google-cloud", region: .scope }
+
+inlet: !include "inlet.yaml"
+console: !include "console.yaml"

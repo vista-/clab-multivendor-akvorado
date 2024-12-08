@@ -1,0 +1,35 @@
+# If possible, overrides should go there!
+
+# If you prefer to use geo IP databases from host, uncomment this block.
+
+# services:
+#   akvorado-orchestrator:
+#     volumes:
+#       - /usr/share/GeoIP:/usr/share/GeoIP:ro
+
+services:
+  akvorado-inlet:
+    ports:
+      - 2055:2055/udp
+      - 6343:6343/udp
+      - 10179:10179/tcp
+    networks:
+      default:
+        ipv4_address: 172.20.21.150
+    
+  traefik:
+    ports:
+      - 127.0.0.1:8080:8080/tcp
+      - 8081:8081/tcp
+    networks:
+      default:
+        ipv4_address: 172.20.21.151
+
+networks:
+  default:
+    name: multivendor-akvorado
+    external: true
+    ipam:
+      config:
+        - subnet: 172.20.21.0/24
+          gateway: 172.20.21.1

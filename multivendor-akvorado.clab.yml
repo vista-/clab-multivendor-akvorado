@@ -1,0 +1,177 @@
+name: multivendor-akvorado
+
+mgmt:
+  network: multivendor-akvorado
+  ipv4-subnet: 172.20.21.0/24
+  ipv6-subnet: 3fff:172:20:21::/64
+
+topology:
+  kinds:
+    nokia_srlinux:
+      image: ghcr.io/nokia/srlinux:23.7.1
+    juniper_vjunosevolved:
+      image: vrnetlab/juniper_vjunosevolved:23.2R2.21-EVO
+    juniper_vjunosrouter:
+      image: vrnetlab/juniper_vjunos-router:23.2R1.15
+  nodes:
+    # Routers
+    #customer-evo:
+    #  kind: juniper_vjunosevolved
+    #  startup-config: customer-evo.conf
+    #  mgmt-ipv4: 172.20.21.2
+    #  mgmt-ipv6: 3fff:172:20:21::2
+    customer-vjunos:
+      kind: juniper_vjunosrouter
+      startup-config: customer-vjunos.conf
+      mgmt-ipv4: 172.20.21.2
+      mgmt-ipv6: 3fff:172:20:21::2
+    customer-srl:
+      kind: nokia_srlinux
+      startup-config: customer-srl.cli
+      mgmt-ipv4: 172.20.21.3
+      mgmt-ipv6: 3fff:172:20:21::3
+    #peering-evo:
+    #  kind: juniper_vjunosevolved
+    #  startup-config: peering-evo.conf
+    #  mgmt-ipv4: 172.20.21.4
+    #  mgmt-ipv6: 3fff:172:20:21::4
+    peering-vjunos:
+      kind: juniper_vjunosrouter
+      startup-config: peering-vjunos.conf
+      mgmt-ipv4: 172.20.21.4
+      mgmt-ipv6: 3fff:172:20:21::4
+
+    # iPerf clients
+    customer-vjunos-iperf10:
+      kind: linux
+      image: mlabbe/iperf3:latest
+      entrypoint: /bin/sh
+      exec:
+        - ip link set dev eth1 up
+        - ip link set dev eth1 mtu 1500
+        - ip addr add 192.168.1.10/24 dev eth1
+        - ip route add 10.0.0.0/8 via 192.168.1.11
+        - ip route add 192.168.0.0/16 via 192.168.1.11
+    customer-vjunos-iperf20:
+      kind: linux
+      image: mlabbe/iperf3:latest
+      entrypoint: /bin/sh
+      exec:
+        - ip link set dev eth1 up
+        - ip link set dev eth1 mtu 1500
+        - ip addr add 192.168.1.20/24 dev eth1
+        - ip route add 10.0.0.0/8 via 192.168.1.21
+        - ip route add 192.168.0.0/16 via 192.168.1.21
+    customer-vjunos-iperf30:
+      kind: linux
+      image: mlabbe/iperf3:latest
+      entrypoint: /bin/sh
+      exec:
+        - ip link set dev eth1 up
+        - ip link set dev eth1 mtu 1500
+        - ip addr add 192.168.1.30/24 dev eth1
+        - ip route add 10.0.0.0/8 via 192.168.1.31
+        - ip route add 192.168.0.0/16 via 192.168.1.31
+    customer-srl-iperf10:
+      kind: linux
+      image: mlabbe/iperf3:latest
+      entrypoint: /bin/sh
+      exec:
+        - ip link set dev eth1 up
+        - ip link set dev eth1 mtu 1500
+        - ip addr add 192.168.2.10/24 dev eth1
+        - ip route add 10.0.0.0/8 via 192.168.2.11
+        - ip route add 192.168.0.0/16 via 192.168.2.11
+    customer-srl-iperf20:
+      kind: linux
+      image: mlabbe/iperf3:latest
+      entrypoint: /bin/sh
+      exec:
+        - ip link set dev eth1 up
+        - ip link set dev eth1 mtu 1500
+        - ip addr add 192.168.2.20/24 dev eth1
+        - ip route add 10.0.0.0/8 via 192.168.2.21
+        - ip route add 192.168.0.0/16 via 192.168.2.21
+    customer-srl-iperf30:
+      kind: linux
+      image: mlabbe/iperf3:latest
+      entrypoint: /bin/sh
+      exec:
+        - ip link set dev eth1 up
+        - ip link set dev eth1 mtu 1500
+        - ip addr add 192.168.2.30/24 dev eth1
+        - ip route add 10.0.0.0/8 via 192.168.2.31
+        - ip route add 192.168.0.0/16 via 192.168.2.31
+    
+    # iPerf servers
+    server-iperf10:
+      kind: linux
+      image: mlabbe/iperf3:latest
+      entrypoint: /bin/sh
+      exec:
+        - ip link set dev eth1 up
+        - ip link set dev eth1 mtu 1500
+        - ip addr add 10.0.10.1/24 dev eth1
+        - ip route add 10.0.0.0/8 via 10.0.10.254
+        - ip route add 192.168.0.0/16 via 10.0.10.254
+        - iperf3 -s -D -J -p5201
+        - iperf3 -s -D -J -p5202
+        - iperf3 -s -D -J -p5203
+        - iperf3 -s -D -J -p5204
+        - iperf3 -s -D -J -p5205
+    server-iperf20:
+      kind: linux
+      image: mlabbe/iperf3:latest
+      entrypoint: /bin/sh
+      exec:
+        - ip link set dev eth1 up
+        - ip link set dev eth1 mtu 1500
+        - ip addr add 10.0.20.1/24 dev eth1
+        - ip route add 10.0.0.0/8 via 10.0.20.254
+        - ip route add 192.168.0.0/16 via 10.0.20.254
+        - iperf3 -s -D -J -p5201
+        - iperf3 -s -D -J -p5202
+        - iperf3 -s -D -J -p5203
+        - iperf3 -s -D -J -p5204
+        - iperf3 -s -D -J -p5205
+    server-iperf30:
+      kind: linux
+      image: mlabbe/iperf3:latest
+      entrypoint: /bin/sh
+      exec:
+        - ip link set dev eth1 up
+        - ip link set dev eth1 mtu 1500
+        - ip addr add 10.0.30.1/24 dev eth1
+        - ip route add 10.0.0.0/8 via 10.0.30.254
+        - ip route add 192.168.0.0/16 via 10.0.30.254
+        - iperf3 -s -D -J -p5201
+        - iperf3 -s -D -J -p5202
+        - iperf3 -s -D -J -p5203
+        - iperf3 -s -D -J -p5204
+        - iperf3 -s -D -J -p5205
+
+  links:
+
+    # peering-vjunos <-> customer-vjunos
+    - endpoints: ["peering-vjunos:ge-0/0/4", "customer-vjunos:ge-0/0/4"] # Transit
+    - endpoints: ["peering-vjunos:ge-0/0/5", "customer-vjunos:ge-0/0/5"] # IX
+    - endpoints: ["peering-vjunos:ge-0/0/6", "customer-vjunos:ge-0/0/6"] # PNI
+    # peering-vjunos <-> customer-srl
+    - endpoints: ["peering-vjunos:ge-0/0/7", "customer-srl:ethernet-1/4"] # Transit
+    - endpoints: ["peering-vjunos:ge-0/0/8", "customer-srl:ethernet-1/5"] # IX
+    - endpoints: ["peering-vjunos:ge-0/0/9", "customer-srl:ethernet-1/6"] # PNI
+    # iPerf client links
+    - endpoints: ["customer-vjunos:ge-0/0/1", "customer-vjunos-iperf10:eth1"]
+    - endpoints: ["customer-vjunos:ge-0/0/2", "customer-vjunos-iperf20:eth1"]
+    - endpoints: ["customer-vjunos:ge-0/0/3", "customer-vjunos-iperf30:eth1"]
+    - endpoints: ["customer-srl:ethernet-1/1", "customer-srl-iperf10:eth1"]
+    - endpoints: ["customer-srl:ethernet-1/2", "customer-srl-iperf20:eth1"]
+    - endpoints: ["customer-srl:ethernet-1/3", "customer-srl-iperf30:eth1"]
+    # iPerf server links
+    - endpoints: ["peering-vjunos:ge-0/0/1", "server-iperf10:eth1"]
+    - endpoints: ["peering-vjunos:ge-0/0/2", "server-iperf20:eth1"]
+    - endpoints: ["peering-vjunos:ge-0/0/3", "server-iperf30:eth1"]
+    # Additional management links for flow export
+    - endpoints: ["peering-vjunos:ge-0/0/0", "mgmt-net:peering-vjunos-flow"]
+    - endpoints: ["customer-vjunos:ge-0/0/0", "mgmt-net:customer-vjunos-flow"]
+    - endpoints: ["customer-srl:ethernet-1/7", "mgmt-net:customer-srl-flow"]
