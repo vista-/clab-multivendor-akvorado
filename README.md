@@ -17,6 +17,8 @@ The containerised NOS image can be freely pulled from the GitHub Container Regis
 - Juniper vJunos-router:
 You need to build a container image using the [vrnetlab](https://github.com/hellt/vrnetlab/tree/master/vjunosrouter) project, if you don't have this image locally. Follow the linked instructions, you **don't need a Juniper account** to download vJunos-router. The lab builds on top of the latest vJunos-router image.
 
+You also need to be able to become/run this as root, this is a limitation of Containerlab.
+
 ## Starting the lab
 
 You can start using this lab topology in four easy steps:
