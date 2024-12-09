@@ -22,16 +22,28 @@ docker exec -it clab-multivendor-akvorado-customer-srl-iperf10 /bin/sh -c "while
 
 echo "vJunos iperf10 via Transit, 1 Mbps"
 docker exec -dit clab-multivendor-akvorado-customer-vjunos-iperf10 iperf3 -c 10.0.10.1 -p5205 -t 10000 -b 1M --bidir
+sleep 0.5
+docker exec -dit clab-multivendor-akvorado-customer-vjunos-iperf10 iperf3 -c 10.0.10.1 -p5205 -t 10000 -b 1M --bidir
 echo "vJunos iperf20 via IX, 2 Mbps"
 docker exec -dit clab-multivendor-akvorado-customer-vjunos-iperf20 iperf3 -c 10.0.20.1 -p5205 -t 10000 -b 2M --bidir
+sleep 0.5
+docker exec -dit clab-multivendor-akvorado-customer-vjunos-iperf20 iperf3 -c 10.0.20.1 -p5205 -t 10000 -b 2M --bidir
 echo "vJunos iperf30 via PNI, 3 Mbps"
+docker exec -dit clab-multivendor-akvorado-customer-vjunos-iperf30 iperf3 -c 10.0.30.1 -p5205 -t 10000 -b 3M --bidir
+sleep 0.5
 docker exec -dit clab-multivendor-akvorado-customer-vjunos-iperf30 iperf3 -c 10.0.30.1 -p5205 -t 10000 -b 3M --bidir
 
 echo "SRL iperf10 via Transit, 1 Mbps"
 docker exec -dit clab-multivendor-akvorado-customer-srl-iperf10 iperf3 -c 10.0.10.1 -p5204 -t 10000 -b 1M --bidir
+sleep 0.5
+docker exec -dit clab-multivendor-akvorado-customer-srl-iperf10 iperf3 -c 10.0.10.1 -p5204 -t 10000 -b 1M --bidir
 echo "SRL iperf20 via IX, 2 Mbps"
 docker exec -dit clab-multivendor-akvorado-customer-srl-iperf20 iperf3 -c 10.0.20.1 -p5204 -t 10000 -b 2M --bidir
+sleep 0.5
+docker exec -dit clab-multivendor-akvorado-customer-srl-iperf20 iperf3 -c 10.0.20.1 -p5204 -t 10000 -b 2M --bidir
 echo "SRL iperf30 via PNI, 3 Mbps"
+docker exec -dit clab-multivendor-akvorado-customer-srl-iperf30 iperf3 -c 10.0.30.1 -p5204 -t 10000 -b 3M --bidir
+sleep 0.5
 docker exec -dit clab-multivendor-akvorado-customer-srl-iperf30 iperf3 -c 10.0.30.1 -p5204 -t 10000 -b 3M --bidir
 
 echo "iPerf ports 5201-5203 are available for further testing"
