@@ -8,7 +8,7 @@ mgmt:
 topology:
   kinds:
     nokia_srlinux:
-      image: ghcr.io/nokia/srlinux:23.7.1
+      image: ghcr.io/nokia/srlinux:24.10.1
     juniper_vjunosevolved:
       image: vrnetlab/juniper_vjunosevolved:23.2R2.21-EVO
     juniper_vjunosrouter:
