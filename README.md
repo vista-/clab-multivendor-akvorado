@@ -40,7 +40,7 @@ docker compose up -d
 ```
 - Run tests from iPerf clients, `docker exec -it <client name> iperf3 -c 10.0.0.1`
 
-The Akvorado dashboard is available at: http://172.20.21.150:8081
+The Akvorado dashboard is available at: http://172.20.22.150:8081
 
 A convenience script, `start.sh`, will do these steps for you, and start a few test iPerf sessions, so you can start working immediately with flow data.
 
